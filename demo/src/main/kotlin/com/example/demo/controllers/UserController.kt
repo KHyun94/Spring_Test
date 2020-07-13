@@ -1,20 +1,24 @@
 package com.example.demo.controllers
 
 import com.example.demo.UserData
+import com.example.demo.models.ApiResult
 import com.example.demo.models.User
 import com.example.demo.services.UserService
+import jdk.jfr.ContentType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@RequestMapping("/api/v1/user")
 class UserController() {
 
     val userService = UserService()
 
-    @PostMapping("/createUser")
-    fun createUser(@RequestParam name: String,
+    // 데이터 등록(생성)
+    @PostMapping("")
+    fun enrollUser(@RequestParam name: String,
                    @RequestParam age: Int,
-                   @RequestParam sex: String): Boolean {
+                   @RequestParam sex: String): ApiResult<Boolean> {
 
         println("Controller API:/createUser RequestParam name => $name")
         println("Controller API:/createUser RequestParam age => $age")
@@ -23,17 +27,26 @@ class UserController() {
         return userService.createUser(name, age, sex)
     }
 
-    @GetMapping("/searchUser")
-    fun searchUser(@RequestParam no: Int): User? {
-        println("Controller API:/searchUser RequestParam no => $no")
-        return userService.searchUser(no = no)
+    // 전체 유저 조회
+    @GetMapping("")
+    fun searchAllUser(): ApiResult<List<User>?> {
+        println("Controller API:/findAll")
+        return userService.searchAllUser()
     }
 
-    @PutMapping("/updateUser")
-    fun updateUser(@RequestParam no: Int,
+    // 특정 유저 조회
+    @GetMapping("/{no}")
+    fun searchUser(@PathVariable("no") no: Int): ApiResult<User?> {
+        println("Controller API:/searchUser RequestParam no => $no")
+        return userService.searchUser(no)
+    }
+
+    // 유저 업데이트
+    @PutMapping("{no}")
+    fun updateUser(@PathVariable no: Int,
                    @RequestParam name: String?,
                    @RequestParam age: Int?,
-                   @RequestParam sex: String?) :Boolean {
+                   @RequestParam sex: String?) :ApiResult<Boolean> {
 
         println("Controller API:/updateUser RequestParam name => $name")
         println("Controller API:/updateUser RequestParam age => $age")
@@ -42,16 +55,13 @@ class UserController() {
         return userService.updateUser(no, name, age, sex)
     }
 
-    @DeleteMapping("/deleteUser")
-    fun deleteUser(@RequestParam no: Int): Boolean {
+    // 유저 삭제
+    @DeleteMapping("/{no}")
+    fun deleteUser(@PathVariable("no") no: Int): ApiResult<Boolean> {
         println("Controller API:/deleteUser RequestParam no => $no")
         return userService.deleteUser(no)
     }
 
-    @GetMapping("/findAll")
-    fun findAllUser(): List<User> {
-        println("Controller API:/findAll")
-        return userService.findAll()
-    }
+
 
 }
