@@ -1,7 +1,7 @@
 package com.example.demo
 
 
-typealias User = com.example.demo.models.User
+typealias User = com.example.demo.models.UserDTO
 
 object UserData {
     var userList = mutableListOf<User>(

@@ -2,18 +2,20 @@ package com.example.demo.services
 
 import com.example.demo.UserData
 import com.example.demo.models.ApiResult
-import com.example.demo.models.User
+import com.example.demo.models.UserDTO
+import com.example.demo.models.UserVO
 import org.springframework.stereotype.Service
+import java.net.http.HttpRequest
 
 @Service
 class UserService() {
 
-    fun createUser(name: String, age: Int, sex: String): ApiResult<Boolean> {
+    fun createUser(user:UserVO): ApiResult<Boolean> {
 
         val no = UserData.userList.size + 1
         println("Service fun createUser new no => $no")
 
-        val isCreate = UserData.userList.add(User(no, name, age, sex))
+        val isCreate = UserData.userList.add(UserDTO(no, user.name!!, user.age!!, user.sex!!))
 
         return if (isCreate) {
             ApiResult(data = isCreate, message = "Success Create User")
@@ -22,37 +24,34 @@ class UserService() {
         }
     }
 
-    fun searchUser(no: Int): ApiResult<User?> {
+    fun searchUser(no: Int): ApiResult<UserDTO?> {
 
         println("Service fun searchUser no => $no")
 
-        var user: User? = null
+        var userDTO: UserDTO? = null
 
         for (i in UserData.userList) {
             if (i.no == no) {
                 println("Cor Match $i")
-                user = i
+                userDTO = i
                 break
             }
         }
 
-        return if (user != null) {
-            ApiResult(data = user, message = "Success Search User")
-        } else {
-            ApiResult(data = null, message = "Fail Search User")
+        return when {
+            userDTO != null -> ApiResult(data = userDTO, message = "Success Search User")
+            else -> ApiResult(data = null, message = "Fail Search User")
         }
     }
 
-    fun updateUser(no: Int, name: String?, age: Int?, sex: String?): ApiResult<Boolean> {
+    fun updateUser(no: Int, userVO: UserVO): ApiResult<Boolean> {
 
         var target = searchUser(no).data
 
         return if (target == null) {
             ApiResult(data = false, message = "Fail Don't search user")
         } else {
-            target.name = name ?: target.name
-            target.age = age ?: target.age
-            target.sex = sex ?: target.sex
+            target.setUser(userVO = userVO)
 
             UserData.userList[no] = target
 
@@ -76,7 +75,7 @@ class UserService() {
         }
     }
 
-    fun searchAllUser(): ApiResult<List<User>?> {
+    fun searchAllUser(): ApiResult<List<UserDTO>?> {
 
         val size  = UserData.userList.size
 

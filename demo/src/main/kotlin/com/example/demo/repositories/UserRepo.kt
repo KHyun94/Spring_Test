@@ -1,6 +1,6 @@
 package com.example.demo.repositories
 
-import com.example.demo.models.User
+import com.example.demo.models.UserDTO
 
 
 interface UserRepo {
@@ -10,6 +10,6 @@ interface UserRepo {
     fun setAge(age:Int)
     fun getSex():String
     fun setSex(set:String)
-    fun getUser():User
-    fun setUser(u:User)
+    fun getUser():UserDTO
+    fun setUser(u:UserDTO)
 }

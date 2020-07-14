@@ -1,12 +1,10 @@
 package com.example.demo.repositories
 
-import com.example.demo.UserData
-import com.example.demo.models.User
-import org.springframework.beans.factory.annotation.Autowired
+import com.example.demo.models.UserDTO
 
-class UserRepoImpl(private val u: User) : UserRepo {
+class UserRepoImpl(private val u: UserDTO) : UserRepo {
 
-    private var user: User = u
+    private var user: UserDTO = u
 
     override fun getName(): String {
         return user.name
@@ -32,11 +30,11 @@ class UserRepoImpl(private val u: User) : UserRepo {
         TODO("Not yet implemented")
     }
 
-    override fun getUser(): User {
+    override fun getUser(): UserDTO {
         TODO("Not yet implemented")
     }
 
-    override fun setUser(u: User) {
+    override fun setUser(u: UserDTO) {
 
     }
 }

@@ -1,11 +1,9 @@
 package com.example.demo.controllers
 
-import com.example.demo.UserData
 import com.example.demo.models.ApiResult
-import com.example.demo.models.User
+import com.example.demo.models.UserDTO
+import com.example.demo.models.UserVO
 import com.example.demo.services.UserService
-import jdk.jfr.ContentType
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,28 +13,24 @@ class UserController() {
     val userService = UserService()
 
     // 데이터 등록(생성)
-    @PostMapping("")
-    fun enrollUser(@RequestParam name: String,
-                   @RequestParam age: Int,
-                   @RequestParam sex: String): ApiResult<Boolean> {
+    @PostMapping("", consumes= ["application/json"],headers = ["content-type=application/x-www-form-urlencoded"])
+    fun enrollUser(userVO: UserVO): ApiResult<Boolean> {
 
-        println("Controller API:/createUser RequestParam name => $name")
-        println("Controller API:/createUser RequestParam age => $age")
-        println("Controller API:/createUser RequestParam sex => $sex")
+        println("Controller API:/createUser RequestParam name => $userVO")
 
-        return userService.createUser(name, age, sex)
+        return userService.createUser(user = userVO)
     }
 
     // 전체 유저 조회
     @GetMapping("")
-    fun searchAllUser(): ApiResult<List<User>?> {
+    fun searchAllUser(): ApiResult<List<UserDTO>?> {
         println("Controller API:/findAll")
         return userService.searchAllUser()
     }
 
     // 특정 유저 조회
     @GetMapping("/{no}")
-    fun searchUser(@PathVariable("no") no: Int): ApiResult<User?> {
+    fun searchUser(@PathVariable("no") no: Int): ApiResult<UserDTO?> {
         println("Controller API:/searchUser RequestParam no => $no")
         return userService.searchUser(no)
     }
@@ -44,15 +38,11 @@ class UserController() {
     // 유저 업데이트
     @PutMapping("{no}")
     fun updateUser(@PathVariable no: Int,
-                   @RequestParam name: String?,
-                   @RequestParam age: Int?,
-                   @RequestParam sex: String?) :ApiResult<Boolean> {
+                   userVO: UserVO) :ApiResult<Boolean> {
 
-        println("Controller API:/updateUser RequestParam name => $name")
-        println("Controller API:/updateUser RequestParam age => $age")
-        println("Controller API:/updateUser RequestParam sex => $sex")
+        println("Controller API:/updateUser RequestParam name => $userVO")
 
-        return userService.updateUser(no, name, age, sex)
+        return userService.updateUser(no = no, userVO = userVO)
     }
 
     // 유저 삭제

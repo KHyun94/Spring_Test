@@ -28,7 +28,7 @@ dependencies {
 //	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:1.1.1")
 	// Gson
 //	implementation("com.google.code.gson:gson:2.3.1")
-
+	implementation("org.projectlombok:lombok")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
